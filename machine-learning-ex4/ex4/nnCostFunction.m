@@ -62,7 +62,7 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
-% Part1: Compute hTheta
+% Part 1 -- Unregularized Cost
 
 for i = 1:m
    xi = X(i,:)';
@@ -82,12 +82,14 @@ for i = 1:m
    J += j_i; 
 end
 
-J /= m
+J /= m;
 
+% Part 2 -- Regularized Cost
+regTheta1 = Theta1(:, 2:end);
+regTheta2 = Theta2(:, 2:end);
+regTerm = (sum(sum(regTheta1.^2)) + sum(sum(regTheta2.^2)))*lambda/(2*m);
 
-
-
-
+J += regTerm;
 
 
 
