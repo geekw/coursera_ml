@@ -62,15 +62,16 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
-% Part 1 -- Unregularized Cost
+% Part 1.1 -- Unregularized Cost
+
+Y = zeros(m, num_labels);
+for i = 1:m
+  Y(i, y(i)) = 1;
+end
 
 for i = 1:m
    xi = X(i,:)';
-   yi = y(i);
-   
-   yzeros = zeros(num_labels, 1);
-   yzeros(yi) = 1;
-   yi = yzeros;
+   yi = Y(i,:)';
 
    a1_i = [1; xi];
    z2_i = Theta1*a1_i;
@@ -84,7 +85,7 @@ end
 
 J /= m;
 
-% Part 2 -- Regularized Cost
+% Part 1.2 -- Regularized Cost
 regTheta1 = Theta1(:, 2:end);
 regTheta2 = Theta2(:, 2:end);
 regTerm = (sum(sum(regTheta1.^2)) + sum(sum(regTheta2.^2)))*lambda/(2*m);
@@ -92,16 +93,42 @@ regTerm = (sum(sum(regTheta1.^2)) + sum(sum(regTheta2.^2)))*lambda/(2*m);
 J += regTerm;
 
 
+% Part 2
+for t=1:m
+ 
+% Step 1
+x = X(t,:)';
+y = Y(t,:)';
 
+a1 = [1; x];
+z2 = Theta1*a1;
+a2 = [1; sigmoid(z2)];
+z3 = Theta2*a2;
+a3 = sigmoid(z3);   
 
+% Step 2
+delta3 = a3 - y;
 
+% Step 3
+delta2 =  Theta2(:, 2:end)'*delta3 .*sigmoidGradient(z2);
 
+% Step 4
+Theta2_grad += delta3*a2';
+Theta1_grad += delta2*a1';
 
+end
 
-
-
-
+% Step 5
+Theta1_grad /= m;
+Theta2_grad /= m;
 % -------------------------------------------------------------
+
+% Step 6
+Theta1(:, 1) = 0;
+Theta1_grad += Theta1*lambda/m;
+
+Theta2(:, 1) = 0;
+Theta2_grad += Theta2*lambda/m;
 
 % =========================================================================
 
