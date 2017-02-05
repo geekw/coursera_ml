@@ -21,8 +21,6 @@ grad = zeros(size(theta));
 h = X*theta - y;
 J = h'*h/(2*m) + theta(2:end)'*theta(2:end)*lambda/(2*m);
 
-
-
 unreg = (h'*X)'./m;
 theta(1) = 0;
 reg_term = lambda*theta/m;
